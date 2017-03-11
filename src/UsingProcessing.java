@@ -7,7 +7,7 @@ import processing.core.PVector;
 public class UsingProcessing extends PApplet{
 	
 	static float Fe = 100;
-	static float h = 5;
+	static float h = 1;
 	static float x, y, z;
 	static List<PMat> pMats;
 	static List<Link> links;
@@ -33,7 +33,7 @@ public class UsingProcessing extends PApplet{
 		links = new ArrayList<Link>();
 		
 		h = (float) (1. / Fe);
-		float alpha = 0.5f;
+		float alpha = 0.1f;
 		float k = alpha * Fe * Fe;
 		float z = (float) (alpha/10. * Fe); /*alpha / 10 = beta*/
 		
@@ -41,7 +41,7 @@ public class UsingProcessing extends PApplet{
 			for(int j = 0; j < flagHeight; ++j){
 				boolean isFix = false;
 				if(i==0) isFix = true;
-				pMats.add(new PMat(new PVector((float) (i)*40 + 20, j*20 + height/2, 0), 1, isFix));
+				pMats.add(new PMat(new PVector((float) (i)*40 + 20, j*20 + height/2, 0), isFix ? 0 : 1, isFix));
 			}
 		}
 
@@ -72,7 +72,8 @@ public class UsingProcessing extends PApplet{
 	
 	public void reset(){
 		double randomIndex = Math.random() * pMats.size();
-		pMats.get((int)randomIndex).getPos().add(5, 5, 0);
+		if(!pMats.get((int)randomIndex).isFix)
+			pMats.get((int)randomIndex).getPos().add(2, 2, 1);
 	}
 	
 	public void update(){
@@ -127,13 +128,16 @@ public class UsingProcessing extends PApplet{
     	
     	//draw PMATS
     	fill(255, 0, 0);
-    	stroke(255, 0, 0);
+    	
     	strokeWeight(10);  // Beastly
     	for(int i = 0; i < pMats.size(); i++){
     		//translate(0, 0, 0);
     		//translate(pMats[i].getPos().x, pMats[i].getPos().y, pMats[i].getPos().z);
     		//sphere(40);
-    		
+    		if(pMats.get(i).isFix){
+    			stroke(0, 0, 255);
+    		}
+    		else stroke(255, 0, 0);
     		point(pMats.get(i).getPos().x, pMats.get(i).getPos().y, pMats.get(i).getPos().z);
     	}
     	

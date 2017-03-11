@@ -7,7 +7,7 @@ public class PMat extends PApplet{
 	private PVector vit;
 	float m;
 	private PVector frc;
-	private boolean isFix;
+	boolean isFix;
 	
 	public PMat(PVector _pos, float _m, boolean isFix) {
 	    this.setPos(new PVector(_pos.x, _pos.y, _pos.z));
