@@ -31,11 +31,15 @@ public class UsingProcessing extends PApplet{
 			links[i].LinkConnect(pMats[i], pMats[i+1]);
 		}
 		
-		pMats[5].getPos().sub(20, 15);
 		
 		
 		
 		
+		
+	}
+	
+	public static void reset(){
+		pMats[5].getPos().sub(15, 15);
 	}
 	
 	public static void update(){
@@ -49,7 +53,7 @@ public class UsingProcessing extends PApplet{
 		{
 			links[i].LinkRessort();
 			links[i].LinkFrein();
-			links[i].LinkGravite(gravity);
+			//links[i].LinkGravite(gravity);
 		}
 		
 	}
@@ -84,6 +88,10 @@ public class UsingProcessing extends PApplet{
     			links[i].getP2().getPos().y
     			);
     	}
+    }
+    
+    public void keyPressed() {
+    	 reset();
     }
 
 }
