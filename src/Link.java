@@ -28,9 +28,10 @@ public class Link {
 	}
 	
 	public void LinkFrein(){
-		PVector dv = new PVector(this.getP2().getVit().x - this.getP1().getVit().x, this.getP2().getVit().y - this.getP1().getVit().y);
+		PVector dv = new PVector(this.getP2().getVit().x - this.getP1().getVit().x, this.getP2().getVit().y - this.getP1().getVit().y, this.getP2().getVit().z - this.getP1().getVit().z);
 		dv.x *= this.z;
 		dv.y *= this.z;
+		dv.z *= this.z;
 		this.getP1().getFrc().add(dv);
 		this.getP2().getFrc().sub(dv);
 	}
