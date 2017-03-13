@@ -1,7 +1,7 @@
 import processing.core.PApplet;
 import processing.core.PVector;
 
-public class PMat extends PApplet{
+abstract class PMat extends PApplet{
 	
 	private PVector pos;
 	private PVector vit;
@@ -24,22 +24,21 @@ public class PMat extends PApplet{
 		this.getVit().x += h / this.m * this.getFrc().x;
 		this.getVit().y += h / this.m * this.getFrc().y;
 		this.getVit().z += h / this.m * this.getFrc().z;
-		if(this.getPos().x + h * this.getVit().x > 620 && this.getPos().x + h * this.getVit().x < 0){
+		if(this.getPos().x + h * this.getVit().x > 640 || this.getPos().x + h * this.getVit().x < 0){
 			this.getVit().x *= -1;
 		}
 		this.getPos().x += h * this.getVit().x;
 	
-		if(this.getPos().y + h * this.getVit().y > 620 && this.getPos().y + h * this.getVit().y < 0){
-			this.getPos().y = 620;
-			this.getVit().y *= -1;
+		if(this.getPos().y + h * this.getVit().y > 640 || this.getPos().y + h * this.getVit().y < 0){
+			this.getVit().y *= -5;
 		}
 		this.getPos().y += h * this.getVit().y;
-		//else this.getPos().y -= h * this.getVit().y;
-		if(this.getPos().z + h * this.getVit().z > 50 && this.getPos().z + h * this.getVit().z < -50){
+		
+		if(this.getPos().z + h * this.getVit().z > 100 || this.getPos().z + h * this.getVit().z < -100){
 			this.getVit().z *= -1;
 		}
 		this.getPos().z += h * this.getVit().z;
-		//else this.getPos().z -= h * this.getVit().z;
+		
 			
 		this.getFrc().set(0, 0, 0);
 	}
@@ -66,6 +65,21 @@ public class PMat extends PApplet{
 
 	public void setVit(PVector vit) {
 		this.vit = vit;
+	}
+	
+	public void act(){
+		
+	}
+
+	public void act(Sheep sheep) {
+		// TODO Auto-generated method stub
+	}
+	public void act(Dog dog) {
+		// TODO Auto-generated method stub
+	}
+	
+	public void act(Wolf wolf) {
+		// TODO Auto-generated method stub
 	}
 	
 	

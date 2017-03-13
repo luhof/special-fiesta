@@ -20,25 +20,29 @@ public class Link {
 	
 	public void LinkRessort(){
 		float d = this.getP1().getPos().dist(this.getP2().getPos());
-		float f = this.k * (1 -this.l0 / d);
+		float f = this.k * (1 - this.l0 / d);
 		
-		this.getP1().getFrc().add(f, f);
-		this.getP2().getFrc().sub(f, f);
+		this.getP1().getFrc().add(f, f, f);
+		this.getP2().getFrc().sub(f, f, f);
 
 	}
 	
 	public void LinkFrein(){
-		PVector dv = new PVector(this.getP2().getVit().x - this.getP1().getVit().x, this.getP2().getVit().y - this.getP1().getVit().y, this.getP2().getVit().z - this.getP1().getVit().z);
-		dv.x *= this.z;
-		dv.y *= this.z;
-		dv.z *= this.z;
+		PVector dv = new PVector(
+				this.getP2().getVit().x - this.getP1().getVit().x,
+				this.getP2().getVit().y - this.getP1().getVit().y,
+				this.getP2().getVit().z - this.getP1().getVit().z
+				);
+		dv.mult(this.z);
 		this.getP1().getFrc().add(dv);
 		this.getP2().getFrc().sub(dv);
 	}
 	
 	public void LinkGravite(PVector gravity){
-		this.getP1().getFrc().add(gravity);
-		this.getP2().getFrc().add(gravity);
+		if(!this.getP1().isFix)
+			this.getP1().getPos().add(gravity);
+		if(!this.getP2().isFix)
+			this.getP2().getPos().add(gravity);
 	}
 
 	public PMat getP1() {
