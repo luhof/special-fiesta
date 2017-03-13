@@ -24,15 +24,145 @@ public class UsingProcessing extends PApplet{
 	}
 
 	public void init(){
-		x = 320;
-		y = 320;
-		z = 0;
-		
 		
 		pMats = new ArrayList<PMat>();
 		links = new ArrayList<Link>();
 		
-		h = (float) (1. / Fe);
+		createParticles();
+		
+		
+		//reset();
+		
+		
+		
+		
+	}
+	
+	public void reset(){
+		double randomIndex = Math.random() * pMats.size();
+		if(!pMats.get((int)randomIndex).isFix)
+			pMats.get((int)randomIndex).getPos().add(10f, 0.1f, 0);
+	}
+	
+	public void update(){
+		camera(mouseX, mouseY, (height/2) / tan(PI/6), width/2, height/2, 0, 0, 1, 0);
+		
+		
+		
+		for(int i = 0; i < pMats.size(); ++i)
+		{
+			pMats.get(i).UpdateLeapFrog(h); 
+		}
+
+		for(int i = 0; i < links.size(); ++i)
+		{
+			
+			links.get(i).LinkRessort();
+			links.get(i).LinkFrein();
+			//links.get(i).LinkGravite(gravity);
+			
+		}
+		updateParticles();
+		
+	}
+	
+	public void settings(){
+	  
+	  size(640, 640, P3D);
+
+	}
+
+    public void setup(){
+    	//fill(255,0,0);
+    	init();
+    	for(int i = 0; i< pMats.size(); i++){
+    		float randDir = (float)Math.random() - 1;
+    		randDir *= 0.5;
+    		pMats.get(i).getPos().add(randDir, randDir, randDir);
+    	}
+
+    }
+
+    public void draw(){
+    	update();
+    	clear();
+    	
+    	//draw LINKS
+    	drawLinks();
+    	
+    	//draw PMATS
+    	drawPMats();
+    	
+    	
+
+    }
+    
+    public void drawLinks(){
+    	    strokeWeight(0.2f);
+    	stroke(120, 120, 120);
+    	for(int i = 0; i< links.size(); i++){
+    		line(
+    			links.get(i).getP1().getPos().x,
+    			links.get(i).getP1().getPos().y,
+    			links.get(i).getP1().getPos().z,
+    			links.get(i).getP2().getPos().x,
+    			links.get(i).getP2().getPos().y,
+    			links.get(i).getP2().getPos().z
+    			);
+    	}
+    }
+    
+    public void drawPMats(){
+    	fill(255, 0, 0);
+    	
+    	strokeWeight(10);  // Beastly
+    	for(int i = 0; i < pMats.size(); i++){
+    		if(pMats.get(i).isFix){
+    			stroke(0, 0, 255);
+    		}
+    		else stroke(255, 0, 0);
+    		point(pMats.get(i).getPos().x, pMats.get(i).getPos().y, pMats.get(i).getPos().z);
+    	}
+    }
+    
+    public void keyPressed() {
+    	 reset();
+    }
+    
+    
+    public void createParticles(){
+    	h = (float) (1. / Fe);
+		float alpha = 0.01f;
+		float k = alpha * Fe * Fe;
+		float z = (float) (alpha/10. * Fe); /*alpha / 10 = beta*/
+		
+		//create random pmats
+		for(int i = 0; i< 200; i++){
+			int randX = (int) (Math.random() * width);
+			int randY = (int) (Math.random() * height);
+			int randZ = (int) (Math.random() * 200) - 200;
+			pMats.add(new PMat(new PVector(randX, randY, randZ), 1, false));
+		}
+		
+		//links each pmat with each other
+		
+		for(int i = 0; i< pMats.size(); i++){
+			for(int j = 0; j<pMats.size(); j++){
+				if(j != i){
+					Link tempLink = new Link(k, z);
+					tempLink.LinkConnect(pMats.get(i), pMats.get(j));
+					links.add(tempLink);
+				}
+				
+			}
+		}
+		
+		
+    }
+    
+    //flag
+    public void createFlag(){
+    	h = (float) (1. / Fe);
 		float alpha = 0.1f;
 		float k = alpha * Fe * Fe;
 		float z = (float) (alpha/10. * Fe); /*alpha / 10 = beta*/
@@ -61,91 +191,36 @@ public class UsingProcessing extends PApplet{
 				links.add(currLink);
 			}
 		}
-		
-		
-		//reset();
-		
-		
-		
-		
-	}
-	
-	public void reset(){
-		double randomIndex = Math.random() * pMats.size();
-		if(!pMats.get((int)randomIndex).isFix)
-			pMats.get((int)randomIndex).getPos().add(2, 2, 1);
-	}
-	
-	public void update(){
-		camera(mouseX, mouseY, (height/2) / tan(PI/6), width/2, height/2, 0, 0, 1, 0);
-		
-		for(int i = 0; i < pMats.size(); ++i)
-		{
-			pMats.get(i).UpdateLeapFrog(h); 
-		}
-
-		for(int i = 0; i < links.size(); ++i)
-		{
-			
-			links.get(i).LinkRessort();
-			links.get(i).LinkFrein();
-			//links.get(i).LinkGravite(gravity);
-			
-		}
-		
-	}
-	
-	public void settings(){
-	  
-	  size(640, 640, P3D);
-	
-
-	}
-
-    public void setup(){
-    	//fill(255,0,0);
-    	init();
-
-    }
-
-    public void draw(){
-    	update();
-    	clear();
-    	
-    	//draw LINKS
-    	strokeWeight(2);
-    	stroke(0, 255, 0);
-    	for(int i = 0; i< links.size(); i++){
-    		line(
-    			links.get(i).getP1().getPos().x,
-    			links.get(i).getP1().getPos().y,
-    			links.get(i).getP1().getPos().z,
-    			links.get(i).getP2().getPos().x,
-    			links.get(i).getP2().getPos().y,
-    			links.get(i).getP2().getPos().z
-    			);
-    	}
-    	
-    	//draw PMATS
-    	fill(255, 0, 0);
-    	
-    	strokeWeight(10);  // Beastly
-    	for(int i = 0; i < pMats.size(); i++){
-    		//translate(0, 0, 0);
-    		//translate(pMats[i].getPos().x, pMats[i].getPos().y, pMats[i].getPos().z);
-    		//sphere(40);
-    		if(pMats.get(i).isFix){
-    			stroke(0, 0, 255);
-    		}
-    		else stroke(255, 0, 0);
-    		point(pMats.get(i).getPos().x, pMats.get(i).getPos().y, pMats.get(i).getPos().z);
-    	}
-    	
-
     }
     
-    public void keyPressed() {
-    	 reset();
-    }
+    
+   public void updateParticles(){
+	   
+	   for(int i = 0; i< pMats.size(); i++){
+		   for(int j = 0; j < pMats.size(); j++){
+			   PMat p1 = pMats.get(i);
+			   PMat p2 = pMats.get(j);
+			   float dist = p1.getPos().dist(p2.getPos());
+			  
+				   PVector distanceVec = p2.getPos().copy();
+				   distanceVec.sub(p1.getPos());
+				   distanceVec.x = Math.signum(distanceVec.x);
+				   distanceVec.y = Math.signum(distanceVec.y);
+				   distanceVec.z = Math.signum(distanceVec.z);
+				   if(dist < 100){
+					   p2.getPos().add(distanceVec.x, distanceVec.y, distanceVec.z);
+					   p1.getPos().sub(distanceVec.x, distanceVec.y, distanceVec.z);
+				   }
+				   else{
+					   distanceVec.mult(0.05f);
+					   p1.getPos().add(distanceVec.x, distanceVec.y, distanceVec.z);
+					   p2.getPos().sub(distanceVec.x, distanceVec.y, distanceVec.z);
+				   }
+		   }
+	   }
+
+   }
+   
+    
 
 }
