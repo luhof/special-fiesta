@@ -13,6 +13,7 @@ public class Dog extends PMat{
 		   distanceVec.x = Math.signum(distanceVec.x);
 		   distanceVec.y = Math.signum(distanceVec.y);
 		   distanceVec.z = Math.signum(distanceVec.z);
+		   distanceVec.mult(10);
 		   //sheep.getPos().add(distanceVec.x, distanceVec.y, distanceVec.z);
 		   this.getFrc().add(distanceVec.x, distanceVec.y, distanceVec.z);
 	}

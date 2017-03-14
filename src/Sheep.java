@@ -37,7 +37,7 @@ public class Sheep extends PMat{
 		   distanceVec.x = Math.signum(distanceVec.x);
 		   distanceVec.y = Math.signum(distanceVec.y);
 		   distanceVec.z = Math.signum(distanceVec.z);
-		   distanceVec.mult(0.5f);
+		  
 		   //sheep.getPos().add(distanceVec.x, distanceVec.y, distanceVec.z);
 		   this.getFrc().sub(distanceVec.x, distanceVec.y, distanceVec.z);
 	}

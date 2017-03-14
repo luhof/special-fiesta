@@ -55,9 +55,9 @@ public class Link {
 	
 	public void LinkGravite(PVector gravity){
 		if(!this.getP1().isFix)
-			this.getP1().getPos().add(gravity);
+			this.getP1().getFrc().add(gravity);
 		if(!this.getP2().isFix)
-			this.getP2().getPos().add(gravity);
+			this.getP2().getFrc().add(gravity);
 	}
 
 	public PMat getP1() {

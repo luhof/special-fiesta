@@ -10,7 +10,7 @@ public class UsingProcessing extends PApplet{
 	static float h = 1/Fe;
 	static List<PMat> pMats;
 	static List<Link> links;
-	static PVector gravity = new PVector(0, 0.98f, 0);
+	static PVector gravity = new PVector(0, 9.8f, 0);
 	static float width = 620f;
 	static float height = 620f;
 	static int flagWidth = 10;
@@ -25,8 +25,8 @@ public class UsingProcessing extends PApplet{
 		pMats = new ArrayList<PMat>();
 		links = new ArrayList<Link>();
 		
-		createParticles();
-		//createFlag();
+		//createParticles();
+		createFlag();
 		//reset();
 				
 	}
@@ -34,13 +34,13 @@ public class UsingProcessing extends PApplet{
 	public void reset(){
 		double randomIndex = Math.random() * pMats.size();
 		if(!pMats.get((int)randomIndex).isFix)
-			pMats.get((int)randomIndex).getPos().add(0f, 10f, 5f);
+			pMats.get((int)randomIndex).getPos().add(0f, 0f, 10f);
 	}
 	
 	public void update(){
 		camera(mouseX, mouseY, (height/2) / tan(PI/6), width/2, height/2, 0, 0, 1, 0);
 		
-		//updateParticles();
+		updateParticles();
 		
 		
 		for(int i = 0; i < pMats.size(); ++i)
@@ -50,9 +50,10 @@ public class UsingProcessing extends PApplet{
 		
 		for(int i = 0; i < links.size(); ++i)
 		{
-			links.get(i).LinkGravite(gravity);
+			
 			links.get(i).LinkRessort();
 			links.get(i).LinkFrein();
+			links.get(i).LinkGravite(gravity);
 		}
 
 		
@@ -77,7 +78,7 @@ public class UsingProcessing extends PApplet{
     	clear();
     	
     	//draw LINKS
-    	//drawLinks();
+    	drawLinks();
     	
     	//draw PMATS
     	drawPMats();
@@ -94,7 +95,7 @@ public class UsingProcessing extends PApplet{
     }
     
     public void drawLinks(){
-    	strokeWeight(2f);
+    	strokeWeight(0.25f);
     	stroke(120, 120, 120);
     	for(int i = 0; i< links.size(); i++){
     		line(
@@ -130,7 +131,7 @@ public class UsingProcessing extends PApplet{
     public void createParticles(){
 
     	h = (float) (1. / Fe);
-		float alpha = 0.01f;
+		float alpha = 0.7f;
 		float k = alpha * Fe * Fe;
 		float z = (float) (alpha/10. * Fe); /*alpha / 10 = beta*/
 		
@@ -147,12 +148,12 @@ public class UsingProcessing extends PApplet{
 		// FIX POINTS
 		pMats.add(new Sheep(new PVector(0, 0, -100), 0, true));
 		pMats.add(new Sheep(new PVector(0, 0, 100), 0, true));
-		pMats.add(new Sheep(new PVector(0, height, -100), 0, true));
-		pMats.add(new Sheep(new PVector(0, height, 100), 0, true));
+		//pMats.add(new Sheep(new PVector(0, height, -100), 0, true));
+		//pMats.add(new Sheep(new PVector(0, height, 100), 0, true));
 		pMats.add(new Sheep(new PVector(width, 0, -100), 0, true));
 		pMats.add(new Sheep(new PVector(width, 0, 100), 0, true));
-		pMats.add(new Sheep(new PVector(width, height, -100), 0, true));
-		pMats.add(new Sheep(new PVector(width, height, 100), 0, true));
+		//pMats.add(new Sheep(new PVector(width, height, -100), 0, true));
+		//pMats.add(new Sheep(new PVector(width, height, 100), 0, true));
 		
 		for(int i = 0; i< 20; i++){
 			int randX = (int) (Math.random() * width);
@@ -160,7 +161,7 @@ public class UsingProcessing extends PApplet{
 			int randZ = (int) (Math.random() * 200) - 200;
 			pMats.add(new Dog(new PVector(randX, randY, randZ), 1, false));
 		}
-		for(int i = 0; i< 2; i++){
+		for(int i = 0; i< 5; i++){
 			int randX = (int) (Math.random() * width);
 			int randY = (int) (Math.random() * height);
 			int randZ = (int) (Math.random() * 200) - 200;
@@ -189,7 +190,7 @@ public class UsingProcessing extends PApplet{
     //flag
     public void createFlag(){
     	h = (float) (1. / Fe);
-		float alpha = 0.01f;
+		float alpha = 0.3f;
 		float k = alpha * Fe * Fe;
 		float z = (float) (alpha/10. * Fe); /*alpha / 10 = beta*/
 		
@@ -251,7 +252,7 @@ public class UsingProcessing extends PApplet{
 			  
 				  
 				
-				   if(dist < 50 && dist > 5){
+				   if(dist < 100 && dist > 5){
 					   if(p2.getClass().getName() == "Dog"){
 						   p1.act((Dog)p2);
 					   }
