@@ -15,7 +15,7 @@ public class Sheep extends PMat{
 		   distanceVec.z = Math.signum(distanceVec.z);
 		   distanceVec.mult(0.1f);
 		   
-		   this.getPos().add(distanceVec.x, distanceVec.y, distanceVec.z);
+		   this.getFrc().add(distanceVec.x, distanceVec.y, distanceVec.z);
 	}
 	
 	@Override
@@ -27,7 +27,7 @@ public class Sheep extends PMat{
 		   distanceVec.z = Math.signum(distanceVec.z);
 		   distanceVec.mult(0.1f);
 		   
-		   this.getPos().add(distanceVec.x, distanceVec.y, distanceVec.z);
+		   this.getFrc().add(distanceVec.x, distanceVec.y, distanceVec.z);
 	}
 	
 	@Override
@@ -39,7 +39,7 @@ public class Sheep extends PMat{
 		   distanceVec.z = Math.signum(distanceVec.z);
 		   distanceVec.mult(0.5f);
 		   //sheep.getPos().add(distanceVec.x, distanceVec.y, distanceVec.z);
-		   this.getPos().sub(distanceVec.x, distanceVec.y, distanceVec.z);
+		   this.getFrc().sub(distanceVec.x, distanceVec.y, distanceVec.z);
 	}
 
 }

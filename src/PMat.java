@@ -24,19 +24,19 @@ abstract class PMat extends PApplet{
 		this.getVit().x += h / this.m * this.getFrc().x;
 		this.getVit().y += h / this.m * this.getFrc().y;
 		this.getVit().z += h / this.m * this.getFrc().z;
-		if(this.getPos().x + h * this.getVit().x > 640 || this.getPos().x + h * this.getVit().x < 0){
+		/*if(this.getPos().x + h * this.getVit().x > 640 || this.getPos().x + h * this.getVit().x < 0){
 			this.getVit().x *= -1;
-		}
+		}*/
 		this.getPos().x += h * this.getVit().x;
 	
-		if(this.getPos().y + h * this.getVit().y > 640 || this.getPos().y + h * this.getVit().y < 0){
+		/*if(this.getPos().y + h * this.getVit().y > 640 || this.getPos().y + h * this.getVit().y < 0){
 			this.getVit().y *= -5;
-		}
+		}*/
 		this.getPos().y += h * this.getVit().y;
 		
-		if(this.getPos().z + h * this.getVit().z > 100 || this.getPos().z + h * this.getVit().z < -100){
+		/*if(this.getPos().z + h * this.getVit().z > 100 || this.getPos().z + h * this.getVit().z < -100){
 			this.getVit().z *= -1;
-		}
+		}*/
 		this.getPos().z += h * this.getVit().z;
 		
 			

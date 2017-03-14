@@ -6,12 +6,11 @@ import processing.core.PVector;
 
 public class UsingProcessing extends PApplet{
 	
-	static float Fe = 50;
+	static float Fe = 100f;
 	static float h = 1/Fe;
-	static float x, y, z;
 	static List<PMat> pMats;
 	static List<Link> links;
-	static PVector gravity = new PVector(0, 0.10f, 0);
+	static PVector gravity = new PVector(0, 0.98f, 0);
 	static float width = 620f;
 	static float height = 620f;
 	static int flagWidth = 10;
@@ -35,25 +34,25 @@ public class UsingProcessing extends PApplet{
 	public void reset(){
 		double randomIndex = Math.random() * pMats.size();
 		if(!pMats.get((int)randomIndex).isFix)
-			pMats.get((int)randomIndex).getPos().add(0f, 0f, 0f);
+			pMats.get((int)randomIndex).getPos().add(0f, 10f, 5f);
 	}
 	
 	public void update(){
 		camera(mouseX, mouseY, (height/2) / tan(PI/6), width/2, height/2, 0, 0, 1, 0);
 		
 		//updateParticles();
-		for(int i = 0; i < links.size(); ++i)
-		{
-			
-			links.get(i).LinkRessort();
-			links.get(i).LinkFrein();
-			//links.get(i).LinkGravite(gravity);
-			
-		}
+		
 		
 		for(int i = 0; i < pMats.size(); ++i)
 		{
 			pMats.get(i).UpdateLeapFrog(h); 
+		}
+		
+		for(int i = 0; i < links.size(); ++i)
+		{
+			links.get(i).LinkGravite(gravity);
+			links.get(i).LinkRessort();
+			links.get(i).LinkFrein();
 		}
 
 		
@@ -69,13 +68,7 @@ public class UsingProcessing extends PApplet{
 	}
 
     public void setup(){
-    	//fill(255,0,0);
     	init();
-    	/*for(int i = 0; i< pMats.size(); i++){
-    		float randDir = (float)Math.random() - 1;
-    		randDir *= 0.5;
-    		pMats.get(i).getPos().add(randDir, randDir, randDir);
-    	}*/
 
     }
 
@@ -89,7 +82,7 @@ public class UsingProcessing extends PApplet{
     	//draw PMATS
     	drawPMats();
     	
-    	strokeWeight(1f);
+    	strokeWeight(0.5f);
     	stroke(0, 0, 255f);
     	line(0f, 640f, 100f, 640f, 640f, 100f);
     	line(0f, 640f, -100f, 640f, 640f, -100f);
@@ -120,6 +113,7 @@ public class UsingProcessing extends PApplet{
     	
     	strokeWeight(10);  // Beastly
     	for(int i = 0; i < pMats.size(); i++){
+    		stroke(255, 255, 255);
     		if(pMats.get(i).getClass().getName() == "Dog") stroke(0, 255, 0);
     		if(pMats.get(i).getClass().getName() == "Sheep") stroke(0, 0, 255);
     		if(pMats.get(i).getClass().getName() == "Wolf") stroke(255, 0, 0);
@@ -146,30 +140,32 @@ public class UsingProcessing extends PApplet{
 				int randX = (int) (Math.random() * width);
 				int randY = (int) (Math.random() * height);
 				int randZ = (int) (Math.random() * 100) - 100;
-				pMats.add(new Sheep(new PVector(i*50, j*50, 0), 1, false));
+				pMats.add(new Sheep(new PVector(randX, randY, randZ), 1, false));
 			}
 		}
 		
-		/*pMats.add(new Sheep(new PVector(0, 0, -100), 0, true));
+		// FIX POINTS
+		pMats.add(new Sheep(new PVector(0, 0, -100), 0, true));
 		pMats.add(new Sheep(new PVector(0, 0, 100), 0, true));
 		pMats.add(new Sheep(new PVector(0, height, -100), 0, true));
 		pMats.add(new Sheep(new PVector(0, height, 100), 0, true));
 		pMats.add(new Sheep(new PVector(width, 0, -100), 0, true));
 		pMats.add(new Sheep(new PVector(width, 0, 100), 0, true));
 		pMats.add(new Sheep(new PVector(width, height, -100), 0, true));
-		pMats.add(new Sheep(new PVector(width, height, 100), 0, true));*/
-		/*for(int i = 0; i< 20; i++){
+		pMats.add(new Sheep(new PVector(width, height, 100), 0, true));
+		
+		for(int i = 0; i< 20; i++){
 			int randX = (int) (Math.random() * width);
 			int randY = (int) (Math.random() * height);
 			int randZ = (int) (Math.random() * 200) - 200;
 			pMats.add(new Dog(new PVector(randX, randY, randZ), 1, false));
 		}
-		for(int i = 0; i< 5; i++){
+		for(int i = 0; i< 2; i++){
 			int randX = (int) (Math.random() * width);
 			int randY = (int) (Math.random() * height);
 			int randZ = (int) (Math.random() * 200) - 200;
 			pMats.add(new Wolf(new PVector(randX, randY, randZ), 1, false));
-		}*/
+		}
 		
 		//links each pmat with each other
 		//List<PMat> pMatsToLink = new ArrayList<PMat>(pMats.size());
@@ -193,7 +189,7 @@ public class UsingProcessing extends PApplet{
     //flag
     public void createFlag(){
     	h = (float) (1. / Fe);
-		float alpha = 0.1f;
+		float alpha = 0.01f;
 		float k = alpha * Fe * Fe;
 		float z = (float) (alpha/10. * Fe); /*alpha / 10 = beta*/
 		
@@ -222,7 +218,9 @@ public class UsingProcessing extends PApplet{
 			}
 		}
 		
-		//diagonal bottom left links
+		/*
+		 * //diagonal bottom left links
+		 
 		for(int i = 0; i< flagWidth -1; i++){
 			for(int j = 0; j< flagHeight-1; j++){
 				Link currLink = new Link(k, z);
@@ -239,6 +237,7 @@ public class UsingProcessing extends PApplet{
 						links.add(currLink);
 					}
 				}
+				*/
     }
     
     
