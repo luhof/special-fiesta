@@ -6,6 +6,11 @@ public class Dog extends PMat{
 		super(_pos, _m, isFix);
 	}
 	
+	public Dog(PMat p) {
+		super(p);
+		// TODO Auto-generated constructor stub
+	}
+
 	@Override
 	public void act(Sheep sheep){
 		   PVector distanceVec = sheep.getPos().copy();

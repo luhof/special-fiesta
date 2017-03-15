@@ -6,15 +6,17 @@ import processing.core.PVector;
 
 public class UsingProcessing extends PApplet{
 	
-	static float Fe = 100f;
+	static float Fe = 200f;
 	static float h = 1/Fe;
 	static List<PMat> pMats;
 	static List<Link> links;
+	static Sphere mySphere;
+	
 	static PVector gravity = new PVector(0, 9.8f, 0);
 	static float width = 620f;
 	static float height = 620f;
-	static int flagWidth = 10;
-	static int flagHeight = 7;
+	static int flagWidth = 30;
+	static int flagHeight = 30;
 	
 	public static void main(String[] args) {
 		PApplet.main("UsingProcessing");
@@ -26,27 +28,52 @@ public class UsingProcessing extends PApplet{
 		links = new ArrayList<Link>();
 		
 		//createParticles();
+		createSphere();
 		createFlag();
 		//reset();
 				
 	}
 	
+	private void createSphere() {
+		mySphere = new Sphere(width/2, height/2, 0, 80);
+	}
+
 	public void reset(){
 		double randomIndex = Math.random() * pMats.size();
 		if(!pMats.get((int)randomIndex).isFix)
-			pMats.get((int)randomIndex).getPos().add(0f, 0f, 10f);
+			pMats.get((int)randomIndex).getPos().add(1f, 1f, 1f);
 	}
 	
 	public void update(){
 		camera(mouseX, mouseY, (height/2) / tan(PI/6), width/2, height/2, 0, 0, 1, 0);
 		
-		updateParticles();
-		
+	
 		
 		for(int i = 0; i < pMats.size(); ++i)
 		{
-			pMats.get(i).UpdateLeapFrog(h); 
+			
+			PVector penetration = mySphere.dist_Sphere(pMats.get(i));
+			if(penetration != null){
+				//penetration.mult(0.01f);
+				pMats.get(i).getFrc().add(penetration);
+				//System.out.println(penetration.y);
+				
+			}
+			pMats.get(i).UpdateLeapFrog(h);
+
+		
+			
+						
+			
 		}
+
+		
+	for(int i = 0; i < pMats.size(); ++i)
+	{
+		
+		
+	}
+		
 		
 		for(int i = 0; i < links.size(); ++i)
 		{
@@ -55,8 +82,12 @@ public class UsingProcessing extends PApplet{
 			links.get(i).LinkFrein();
 			links.get(i).LinkGravite(gravity);
 		}
+		
+
 
 		
+		
+
 		
 		
 		
@@ -81,22 +112,26 @@ public class UsingProcessing extends PApplet{
     	drawLinks();
     	
     	//draw PMATS
-    	drawPMats();
+    	//drawPMats();
     	
-    	strokeWeight(0.5f);
-    	stroke(0, 0, 255f);
-    	line(0f, 640f, 100f, 640f, 640f, 100f);
-    	line(0f, 640f, -100f, 640f, 640f, -100f);
-    	line(0f, 640f, 100f, 0f, 640f, -100f);
-    	line(640f, 640f, 100f, 640f, 640f, -100f);
+    	noStroke();
+    	fill(255, 0, 255);
+    	directionalLight(255, 0, 255, 0, -1, 0);
+    	
+    	fill(0, 255, 255);
+    	directionalLight(255, 255, 255, 0, 1, 0);
+    	translate(mySphere.pos.x, mySphere.pos.y, mySphere.pos.z);
+    	sphere(mySphere.radius);
+    	translate(width/2, height/2, 0);
+    	
     	
     	 
 
     }
     
     public void drawLinks(){
-    	strokeWeight(0.25f);
-    	stroke(120, 120, 120);
+    	strokeWeight(0.75f);
+    	stroke(255, 255, 120);
     	for(int i = 0; i< links.size(); i++){
     		line(
     			links.get(i).getP1().getPos().x,
@@ -110,12 +145,12 @@ public class UsingProcessing extends PApplet{
     }
     
     public void drawPMats(){
-    	fill(255, 0, 0);
+    	
     	
     	strokeWeight(10);  // Beastly
     	for(int i = 0; i < pMats.size(); i++){
     		stroke(255, 255, 255);
-    		if(pMats.get(i).getClass().getName() == "Dog") stroke(0, 255, 0);
+    		if(pMats.get(i).getClass().getName() == "Dog") stroke(255, 255, 255);
     		if(pMats.get(i).getClass().getName() == "Sheep") stroke(0, 0, 255);
     		if(pMats.get(i).getClass().getName() == "Wolf") stroke(255, 0, 0);
     		
@@ -131,15 +166,15 @@ public class UsingProcessing extends PApplet{
     public void createParticles(){
 
     	h = (float) (1. / Fe);
-		float alpha = 0.7f;
+		float alpha = 0.025f;
 		float k = alpha * Fe * Fe;
 		float z = (float) (alpha/10. * Fe); /*alpha / 10 = beta*/
 		
 		//create random pmats
 		for(int i = 0; i< 10; i++){
 			for(int j = 0; j< 10; j++){
-				int randX = (int) (Math.random() * width);
-				int randY = (int) (Math.random() * height);
+				int randX = (int) (Math.random() * width/2);
+				int randY = (int) (Math.random() * height/2);
 				int randZ = (int) (Math.random() * 100) - 100;
 				pMats.add(new Sheep(new PVector(randX, randY, randZ), 1, false));
 			}
@@ -147,11 +182,11 @@ public class UsingProcessing extends PApplet{
 		
 		// FIX POINTS
 		pMats.add(new Sheep(new PVector(0, 0, -100), 0, true));
-		pMats.add(new Sheep(new PVector(0, 0, 100), 0, true));
+		//pMats.add(new Sheep(new PVector(0, 0, 100), 0, true));
 		//pMats.add(new Sheep(new PVector(0, height, -100), 0, true));
 		//pMats.add(new Sheep(new PVector(0, height, 100), 0, true));
-		pMats.add(new Sheep(new PVector(width, 0, -100), 0, true));
-		pMats.add(new Sheep(new PVector(width, 0, 100), 0, true));
+		//pMats.add(new Sheep(new PVector(width, 0, -100), 0, true));
+		//pMats.add(new Sheep(new PVector(width, 0, 100), 0, true));
 		//pMats.add(new Sheep(new PVector(width, height, -100), 0, true));
 		//pMats.add(new Sheep(new PVector(width, height, 100), 0, true));
 		
@@ -193,12 +228,12 @@ public class UsingProcessing extends PApplet{
 		float alpha = 0.3f;
 		float k = alpha * Fe * Fe;
 		float z = (float) (alpha/10. * Fe); /*alpha / 10 = beta*/
-		
+		//pMats.add(new Dog(new PVector(width/2, height/2, 0), 1, true));
 		for(int i = 0; i < flagWidth; ++i){
 			for(int j = 0; j < flagHeight; ++j){
 				boolean isFix = false;
-				if(i==0) isFix = true;
-				pMats.add(new Dog(new PVector((float) (i)*40 + 20, j*20 + height/2, 0), isFix ? 0 : 1, isFix));
+				//if(i==0) isFix = true;
+				pMats.add(new Dog(new PVector((float) (i)*15+50, 0, j*15 -100), isFix ? 0 : 1, isFix));
 			}
 		}
 
@@ -219,8 +254,7 @@ public class UsingProcessing extends PApplet{
 			}
 		}
 		
-		/*
-		 * //diagonal bottom left links
+		 //diagonal bottom left links
 		 
 		for(int i = 0; i< flagWidth -1; i++){
 			for(int j = 0; j< flagHeight-1; j++){
@@ -238,7 +272,7 @@ public class UsingProcessing extends PApplet{
 						links.add(currLink);
 					}
 				}
-				*/
+				
     }
     
     

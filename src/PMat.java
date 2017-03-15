@@ -17,6 +17,14 @@ abstract class PMat extends PApplet{
 	    this.isFix = isFix;
 	}
 	
+	public PMat(PMat p){
+		this.setPos(new PVector(p.pos.x, p.pos.y, p.pos.z));
+		this.m = p.m;
+		this.setVit(new PVector(0, 0, 0));
+		this.setFrc(new PVector(0, 0, 0));
+		this.isFix = p.isFix;
+	}
+	
 	public void UpdateLeapFrog(double h)
 	{
 		if(this.isFix) return;
@@ -24,13 +32,13 @@ abstract class PMat extends PApplet{
 		this.getVit().x += h / this.m * this.getFrc().x;
 		this.getVit().y += h / this.m * this.getFrc().y;
 		this.getVit().z += h / this.m * this.getFrc().z;
-		/*if(this.getPos().x + h * this.getVit().x > 640 || this.getPos().x + h * this.getVit().x < 0){
+		if(this.getPos().x + h * this.getVit().x > 640 || this.getPos().x + h * this.getVit().x < 0){
 			this.getVit().x *= -1;
-		}*/
+		}
 		this.getPos().x += h * this.getVit().x;
 	
 		/*if(this.getPos().y + h * this.getVit().y > 640 || this.getPos().y + h * this.getVit().y < 0){
-			this.getVit().y *= -5;
+			this.getVit().y *= -1;
 		}*/
 		this.getPos().y += h * this.getVit().y;
 		
@@ -70,6 +78,8 @@ abstract class PMat extends PApplet{
 	public void act(){
 		
 	}
+	
+	
 
 	public void act(Sheep sheep) {
 		// TODO Auto-generated method stub

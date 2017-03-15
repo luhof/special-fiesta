@@ -29,15 +29,15 @@ public class Link {
 		float d = this.getP2().getPos().dist(this.getP1().getPos());
 	
 		// * dir (sub des 2)
-		float f = -this.k * (1-this.l0 / d);
+		float f = this.k * (1-this.l0 / d);
 		PVector dir = new PVector(
 				this.getP2().getPos().x - this.getP1().getPos().x,
 				this.getP2().getPos().y - this.getP1().getPos().y,
 				this.getP2().getPos().z - this.getP1().getPos().z);
 		dir.mult(f);
 		
-		this.getP2().getFrc().add(dir.x, dir.y, dir.z);
-		this.getP1().getFrc().sub(dir.x, dir.y, dir.z);
+		this.getP2().getFrc().sub(dir.x, dir.y, dir.z);
+		this.getP1().getFrc().add(dir.x, dir.y, dir.z);
 	}
 	
 	public void LinkFrein(){
