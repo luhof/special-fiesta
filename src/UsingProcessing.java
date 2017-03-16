@@ -115,7 +115,6 @@ public class UsingProcessing extends PApplet{
 
     public void setup(){
     	init();
-    	img = loadImage("./incerti.jpg");
 
     }
 
