@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import processing.core.PApplet;
+import processing.core.PImage;
 import processing.core.PVector;
 
 public class UsingProcessing extends PApplet{
@@ -12,12 +13,13 @@ public class UsingProcessing extends PApplet{
 	static List<Link> links;
 	static Sphere mySphere;
 	static Cube myCube;
+	public PImage img;
 	
-	static PVector gravity = new PVector(0, 9.8f, 0);
+	static PVector gravity = new PVector(0, 19.8f, 0);
 	static float width = 620f;
 	static float height = 620f;
-	static int flagWidth = 30;
-	static int flagHeight = 15;
+	static int flagWidth = 60;
+	static int flagHeight = 30;
 	
 	public static void main(String[] args) {
 		PApplet.main("UsingProcessing");
@@ -37,35 +39,39 @@ public class UsingProcessing extends PApplet{
 	}
 	
 	private void createSphere() {
-		mySphere = new Sphere(width/2, height/2, 0, 80);
+		mySphere = new Sphere(width/2-100, height/2, 0, 80);
 	}
 	
 	private void createCube(){
-		myCube = new Cube(width/2+100, height/2, 0, 200);
+		myCube = new Cube(width/2+100, height/2, 0, 100);
 	}
 
 	public void reset(){
-		double randomIndex = Math.random() * pMats.size();
-		if(!pMats.get((int)randomIndex).isFix)
-			pMats.get((int)randomIndex).getPos().add(1f, 1f, 1f);
+		pMats.clear();
+		links.clear();
+		createFlag();
+		myCube.pos.x = (float) (Math.random()*width/2+100);
+		myCube.pos.y = (float) (Math.random()*height/2 + 100);
+		myCube.pos.z = (float) (Math.random()*50);
+		mySphere.pos.x = (float) (Math.random()*width/2+100);
+		mySphere.pos.y = (float) (Math.random()*height/2 + 100);
+		mySphere.pos.z = (float) (Math.random()*50);
 	}
 	
 	public void update(){
 		camera(mouseX, mouseY, (height/2) / tan(PI/6), width/2, height/2, 0, 0, 1, 0);
 		
-	
-		
 		for(int i = 0; i < pMats.size(); ++i)
 		{
 			
-			/*PVector penetration = mySphere.dist_Sphere(pMats.get(i));
+			PVector penetration = mySphere.dist_Sphere(pMats.get(i));
 			if(penetration != null){
 				
 				pMats.get(i).getFrc().add(penetration);
 				
-			}*/
+			}
 			
-			PVector penetration = myCube.dist_Cube(pMats.get(i));
+			penetration = myCube.dist_Cube(pMats.get(i));
 			if(penetration != null){
 				
 				pMats.get(i).getFrc().add(penetration);
@@ -109,6 +115,7 @@ public class UsingProcessing extends PApplet{
 
     public void setup(){
     	init();
+    	img = loadImage("./incerti.jpg");
 
     }
 
@@ -122,19 +129,52 @@ public class UsingProcessing extends PApplet{
     	//draw PMATS
     	//drawPMats();
     	
+    	
+    	
+    	/*
+    	 * 
+    	 * trying to draw texture
+    	 * 
+    	 */
+    	
+    	
+    	// "laDefense.jpg" is 100x100 pixels in size so
+    	// the values 0 and 100 are used for the
+    	// parameters "u" and "v" to map it directly
+    	// to the vertex points
+		/*beginShape(TRIANGLE_FAN);
+    	texture(img);
+    	for(int i = 0; i< flagWidth-1; i++){
+    		for(int j = 0; j< flagHeight-1; j++){
+    			int indice = (j*flagWidth +i);
+
+    			vertex(pMats.get(indice).getPos().x, pMats.get(indice).getPos().y, pMats.get(indice).getPos().z, (float)838f/flagWidth *i, (float)1102f/flagHeight * j);
+    			vertex(pMats.get(indice).getPos().x, pMats.get(indice).getPos().y, pMats.get(indice).getPos().z, (float)838f/flagWidth *(i+1), (float)1102f/flagHeight * (j+1));
+    			vertex(pMats.get(indice).getPos().x, pMats.get(indice).getPos().y, pMats.get(indice).getPos().z, (float)838f/flagWidth *i, (float)1102f/flagHeight * (j+1));
+    			
+    			
+    		}
+    	}
+    	endShape(CLOSE);*/
+    	
+    
+    	
+    	
     	noStroke();
     	fill(255, 0, 255);
-    	directionalLight(255, 0, 255, 0, -1, 0);
+    	directionalLight(255, 120, 255, 0.4f, -1, 0.3f);
     	
     	fill(0, 255, 255);
     	directionalLight(255, 255, 255, 0, 1, 0);
     	ambientLight(120, 0, 120);
-    	/*translate(mySphere.pos.x, mySphere.pos.y, mySphere.pos.z);
+    	pushMatrix();
+    	translate(mySphere.pos.x, mySphere.pos.y, mySphere.pos.z);
     	sphere(mySphere.radius);
-    	translate(width/2, height/2, 0);*/
+    	popMatrix();
+    	pushMatrix();
     	translate(myCube.pos.x, myCube.pos.y, myCube.pos.z);
     	box(myCube.size);
-    	translate(width/2, height/2, 0);
+    	popMatrix();
     	
     	
     	
@@ -160,9 +200,9 @@ public class UsingProcessing extends PApplet{
     public void drawPMats(){
     	
     	
-    	strokeWeight(10);  // Beastly
+    	strokeWeight(3);  // Beastly
     	for(int i = 0; i < pMats.size(); i++){
-    		stroke(255, 255, 255);
+    		stroke(255, 0, 0);
     		if(pMats.get(i).getClass().getName() == "Dog") stroke(255, 255, 255);
     		if(pMats.get(i).getClass().getName() == "Sheep") stroke(0, 0, 255);
     		if(pMats.get(i).getClass().getName() == "Wolf") stroke(255, 0, 0);
@@ -172,81 +212,44 @@ public class UsingProcessing extends PApplet{
     }
     
     public void keyPressed() {
-    	 reset();
+    	
+    	 if (key == CODED) {
+    		    if (keyCode == UP) {
+    		    	mySphere.pos.z -= 10;
+    		    }
+    		    else if(keyCode == DOWN){
+    		    	mySphere.pos.z += 10;
+    		    }
+    		    else if(keyCode == LEFT){
+    		    	mySphere.pos.x -=10;
+    		    }
+    		    else if(keyCode == RIGHT){
+    		    	mySphere.pos.x +=10;
+    		    }
+    		    else{
+    		    	 reset();
+    		    }
+    	 }
+    	 else reset();
     }
     
-    
-    public void createParticles(){
-
-    	h = (float) (1. / Fe);
-		float alpha = 0.35f;
-		float k = alpha * Fe * Fe;
-		float z = (float) (alpha/10. * Fe); /*alpha / 10 = beta*/
-		
-		//create random pmats
-		for(int i = 0; i< 10; i++){
-			for(int j = 0; j< 10; j++){
-				int randX = (int) (Math.random() * width/2);
-				int randY = (int) (Math.random() * height/2);
-				int randZ = (int) (Math.random() * 100) - 100;
-				pMats.add(new Sheep(new PVector(randX, randY, randZ), 1, false));
-			}
-		}
-		
-		// FIX POINTS
-		pMats.add(new Sheep(new PVector(0, 0, -100), 0, true));
-		//pMats.add(new Sheep(new PVector(0, 0, 100), 0, true));
-		//pMats.add(new Sheep(new PVector(0, height, -100), 0, true));
-		//pMats.add(new Sheep(new PVector(0, height, 100), 0, true));
-		//pMats.add(new Sheep(new PVector(width, 0, -100), 0, true));
-		//pMats.add(new Sheep(new PVector(width, 0, 100), 0, true));
-		//pMats.add(new Sheep(new PVector(width, height, -100), 0, true));
-		//pMats.add(new Sheep(new PVector(width, height, 100), 0, true));
-		
-		for(int i = 0; i< 20; i++){
-			int randX = (int) (Math.random() * width);
-			int randY = (int) (Math.random() * height);
-			int randZ = (int) (Math.random() * 200) - 200;
-			pMats.add(new Dog(new PVector(randX, randY, randZ), 1, false));
-		}
-		for(int i = 0; i< 5; i++){
-			int randX = (int) (Math.random() * width);
-			int randY = (int) (Math.random() * height);
-			int randZ = (int) (Math.random() * 200) - 200;
-			pMats.add(new Wolf(new PVector(randX, randY, randZ), 1, false));
-		}
-		
-		//links each pmat with each other
-		//List<PMat> pMatsToLink = new ArrayList<PMat>(pMats.size());
-		//List<Dog> clone = new ArrayList<Dog>(list.size());
-	    
-		for(int i = 0; i< pMats.size(); i++){
-			for(int j = i; j<pMats.size(); j++){
-						if(i!=j){
-							Link tempLink = new Link(k, z);
-							tempLink.LinkConnect(pMats.get(i), pMats.get(j));
-							links.add(tempLink);
-						}
-						
-					
-			}
-		}
-		
-		
-    }
-    
+   
     //flag
     public void createFlag(){
     	h = (float) (1. / Fe);
-		float alpha = 0.1f;
+		float alpha = 0.3f;
 		float k = alpha * Fe * Fe;
 		float z = (float) (alpha/10. * Fe); /*alpha / 10 = beta*/
+		
+		float randPosX = (float) (Math.random() * width/3);
+		float randPosZ = (float) (Math.random() * 200);
+		//float randPosY = (float) (Math.random() * 50);
 		//pMats.add(new Dog(new PVector(width/2, height/2, 0), 1, true));
 		for(int i = 0; i < flagWidth; ++i){
 			for(int j = 0; j < flagHeight; ++j){
 				boolean isFix = false;
 				//if(i==0) isFix = true;
-				pMats.add(new Dog(new PVector((float) (i)*15+50, 0, j*15 -100), isFix ? 0 : 1, isFix));
+				pMats.add(new PMat(new PVector((float) (i)*7+randPosX, 0, j*7 -randPosZ), isFix ? 0 : 1, isFix));
 			}
 		}
 
@@ -293,28 +296,7 @@ public class UsingProcessing extends PApplet{
 	   
 	   for(int i = 0; i< pMats.size(); i++){
 		   for(int j = 0; j < pMats.size(); j++){
-			   PMat p1 = pMats.get(i);
-			   PMat p2 = pMats.get(j);
-			   float dist = p1.getPos().dist(p2.getPos());
 			  
-				  
-				
-				   if(dist < 100 && dist > 5){
-					   if(p2.getClass().getName() == "Dog"){
-						   p1.act((Dog)p2);
-					   }
-					   else if(p2.getClass().getName() == "Sheep")
-						   p1.act((Sheep)p2);
-					   else if(p2.getClass().getName() == "Wolf")
-						   p1.act((Wolf)p2);
-					   
-				   }
-				   else{
-					   /*distanceVec.mult(0.05f);
-					   p1.getPos().add(distanceVec.x, distanceVec.y, distanceVec.z);
-					   p2.getPos().sub(distanceVec.x, distanceVec.y, distanceVec.z);
-				   
-				   */}
 		   }
 	   }
 

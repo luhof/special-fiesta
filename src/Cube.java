@@ -19,9 +19,9 @@ public class Cube extends PApplet{
 	
 	public PVector dist_Cube(PMat p){
 		
-		PMat nextPoint = new Dog(p);
+		PMat nextPoint = new PMat(p);
 		
-		nextPoint.UpdateLeapFrog(1/100f);
+		nextPoint.UpdateLeapFrog(1/200f);
 		
 		//nextPoint.(p.getVit().copy());
 		float d = distance(nextPoint.getPos().copy(), this.pos.copy());
@@ -43,11 +43,11 @@ public class Cube extends PApplet{
 			}
 			if(d - normY < 0.1 && d-normY > -0.1){
 				penetration.y = nextPoint.getPos().y * (1 / (d)- 1);
-				if(nextPoint.getPos().y > pos.y) penetration.x *= -1;
+				if(nextPoint.getPos().y > pos.y) penetration.y *= -1;
 			}
 			if(d - normZ < 0.1 && d-normZ > -0.1){
 				penetration.z = nextPoint.getPos().z * (1 / (d) - 1);
-				if(nextPoint.getPos().z > pos.z) penetration.x *= -1;
+				if(nextPoint.getPos().z > pos.z) penetration.z *= -1;
 			}
 			penetration.mult(size);
 			return penetration;

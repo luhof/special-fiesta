@@ -1,7 +1,7 @@
 import processing.core.PApplet;
 import processing.core.PVector;
 
-abstract class PMat extends PApplet{
+public class PMat extends PApplet{
 	
 	private PVector pos;
 	private PVector vit;
@@ -77,19 +77,6 @@ abstract class PMat extends PApplet{
 	
 	public void act(){
 		
-	}
-	
-	
-
-	public void act(Sheep sheep) {
-		// TODO Auto-generated method stub
-	}
-	public void act(Dog dog) {
-		// TODO Auto-generated method stub
-	}
-	
-	public void act(Wolf wolf) {
-		// TODO Auto-generated method stub
 	}
 	
 	

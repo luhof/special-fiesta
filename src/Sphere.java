@@ -25,7 +25,7 @@ public class Sphere extends PApplet{
 	
 	public PVector dist_Sphere(PMat p){
 		
-		PMat nextPoint = new Dog(p);
+		PMat nextPoint = new PMat(p);
 		
 		nextPoint.UpdateLeapFrog(1/200f);
 		
@@ -46,7 +46,7 @@ public class Sphere extends PApplet{
 			penetration.y = p.getPos().y * d;
 			if(p.getPos().y > this.pos.y) penetration.y *= -1;
 			penetration.z = p.getPos().z * d;
-			if(p.getPos().z > this.pos.y) penetration.z *= -1;
+			if(p.getPos().z > this.pos.z) penetration.z *= -1;
 			//penetration.mult(d);
 			return penetration;
 		}
