@@ -11,12 +11,13 @@ public class UsingProcessing extends PApplet{
 	static List<PMat> pMats;
 	static List<Link> links;
 	static Sphere mySphere;
+	static Cube myCube;
 	
 	static PVector gravity = new PVector(0, 9.8f, 0);
 	static float width = 620f;
 	static float height = 620f;
 	static int flagWidth = 30;
-	static int flagHeight = 30;
+	static int flagHeight = 15;
 	
 	public static void main(String[] args) {
 		PApplet.main("UsingProcessing");
@@ -29,6 +30,7 @@ public class UsingProcessing extends PApplet{
 		
 		//createParticles();
 		createSphere();
+		createCube();
 		createFlag();
 		//reset();
 				
@@ -36,6 +38,10 @@ public class UsingProcessing extends PApplet{
 	
 	private void createSphere() {
 		mySphere = new Sphere(width/2, height/2, 0, 80);
+	}
+	
+	private void createCube(){
+		myCube = new Cube(width/2+100, height/2, 0, 200);
 	}
 
 	public void reset(){
@@ -52,27 +58,29 @@ public class UsingProcessing extends PApplet{
 		for(int i = 0; i < pMats.size(); ++i)
 		{
 			
-			PVector penetration = mySphere.dist_Sphere(pMats.get(i));
+			/*PVector penetration = mySphere.dist_Sphere(pMats.get(i));
 			if(penetration != null){
-				//penetration.mult(0.01f);
+				
 				pMats.get(i).getFrc().add(penetration);
-				//System.out.println(penetration.y);
+				
+			}*/
+			
+			PVector penetration = myCube.dist_Cube(pMats.get(i));
+			if(penetration != null){
+				
+				pMats.get(i).getFrc().add(penetration);
 				
 			}
-			pMats.get(i).UpdateLeapFrog(h);
-
-		
 			
-						
+			
+				
 			
 		}
+		
+		for(int i = 0; i < pMats.size(); i++){
+			pMats.get(i).UpdateLeapFrog(h);
+		}
 
-		
-	for(int i = 0; i < pMats.size(); ++i)
-	{
-		
-		
-	}
 		
 		
 		for(int i = 0; i < links.size(); ++i)
@@ -120,9 +128,14 @@ public class UsingProcessing extends PApplet{
     	
     	fill(0, 255, 255);
     	directionalLight(255, 255, 255, 0, 1, 0);
-    	translate(mySphere.pos.x, mySphere.pos.y, mySphere.pos.z);
+    	ambientLight(120, 0, 120);
+    	/*translate(mySphere.pos.x, mySphere.pos.y, mySphere.pos.z);
     	sphere(mySphere.radius);
+    	translate(width/2, height/2, 0);*/
+    	translate(myCube.pos.x, myCube.pos.y, myCube.pos.z);
+    	box(myCube.size);
     	translate(width/2, height/2, 0);
+    	
     	
     	
     	 
@@ -166,7 +179,7 @@ public class UsingProcessing extends PApplet{
     public void createParticles(){
 
     	h = (float) (1. / Fe);
-		float alpha = 0.025f;
+		float alpha = 0.35f;
 		float k = alpha * Fe * Fe;
 		float z = (float) (alpha/10. * Fe); /*alpha / 10 = beta*/
 		
@@ -225,7 +238,7 @@ public class UsingProcessing extends PApplet{
     //flag
     public void createFlag(){
     	h = (float) (1. / Fe);
-		float alpha = 0.3f;
+		float alpha = 0.1f;
 		float k = alpha * Fe * Fe;
 		float z = (float) (alpha/10. * Fe); /*alpha / 10 = beta*/
 		//pMats.add(new Dog(new PVector(width/2, height/2, 0), 1, true));

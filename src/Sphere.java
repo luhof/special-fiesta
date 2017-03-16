@@ -27,21 +27,20 @@ public class Sphere extends PApplet{
 		
 		PMat nextPoint = new Dog(p);
 		
-		nextPoint.UpdateLeapFrog(1/100f);
+		nextPoint.UpdateLeapFrog(1/200f);
 		
 		//nextPoint.(p.getVit().copy());
 		float d = distance(nextPoint.getPos().copy(), this.pos.copy());
 		//float d = nextPoint.getPos().dist(this.pos);
 		
-		if(d > this.radius + 0.01){
+		if(d > this.radius){
 			return null;
 		}
 		else{
 			d = (float) (radius /  Math.sqrt(d) - radius);
-			System.out.println(d);
 			PVector penetration = new PVector();
 			//penetration = nextPoint.getPos().copy();
-			float alpha = 0.01f;
+			//float alpha = 0.01f;
 			penetration.x = p.getPos().x * d;
 			if(p.getPos().x > this.pos.x) penetration.x *= -1;
 			penetration.y = p.getPos().y * d;
